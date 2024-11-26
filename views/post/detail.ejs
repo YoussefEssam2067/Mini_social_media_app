@@ -1,0 +1,171 @@
+<%- include('../partials/headerProfile') %>
+
+<div class="container mt-5">
+  <h1 class="text-center"><%= post.title %></h1>
+
+  <div class="post-meta text-center">
+    <small class="text-muted">
+      Posted by <%= post.User.name %> on <%= post.createdAt.toLocaleString() %>
+    </small>
+  </div>
+
+  <div class="post-content mt-4">
+    <p><%= post.content %></p>
+  </div>
+
+  <% if (post.images && post.images.length > 0) { %>
+  <div
+    id="carouselPost<%= post.id %>"
+    class="carousel slide"
+    data-bs-ride="carousel"
+  >
+    <div class="carousel-inner">
+      <% post.images.forEach((image, index) => { %>
+      <div class="text-center carousel-item <%= index === 0 ? 'active' : '' %>">
+        <img
+          src="/uploads/posts/<%= image %>"
+          alt="Post Image"
+          class="img-fluid"
+          style="max-width: 100%; height: auto; margin-bottom: 10px"
+        />
+      </div>
+      <% }) %>
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselPost<%= post.id %>"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselPost<%= post.id %>"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <% } %>
+
+  <!-- Comments section -->
+  <div class="comments mt-5">
+    <h3>Comments</h3>
+
+    <% if (comments && comments.length > 0) { %>
+    <ul class="list-group">
+      <% comments.forEach(comment => { %>
+      <li class="list-group-item">
+        <p><strong><%= comment.User.name %>:</strong> <%= comment.content %></p>
+
+        <% if (comment.images && comment.images.length > 0) { %>
+        <div
+          id="carouselComment<%= comment.id %>"
+          class="carousel slide"
+          data-bs-ride="carousel"
+        >
+          <div class="carousel-inner">
+            <% comment.images.forEach((image, index) => { %>
+            <div
+              class="text-center carousel-item <%= index === 0 ? 'active' : '' %>"
+            >
+              <img
+                src="/uploads/comments/<%= image %>"
+                alt="Comment Image"
+                class="img-fluid"
+                style="max-width: 200px; margin: auto"
+              />
+            </div>
+            <% }) %>
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselComment<%= comment.id %>"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselComment<%= comment.id %>"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        <% } %>
+
+        <small class="text-muted">
+          <%= comment.createdAt.toLocaleString() %>
+        </small>
+
+        <% if (comment.userId === userId) { %>
+        <form
+          action="/posts/<%= post.id %>/comments/<%= comment.id %>/edit"
+          method="GET"
+          style="display: inline"
+        >
+          <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+        </form>
+        <form
+          action="/posts/<%= post.id %>/comments/<%= comment.id %>/delete"
+          method="POST"
+          style="display: inline"
+        >
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+        <% } %>
+      </li>
+      <% }) %>
+    </ul>
+    <% } else { %>
+    <p>No comments yet.</p>
+    <% } %>
+  </div>
+
+  <!-- Add a comment -->
+  <div class="mt-4">
+    <h4>Leave a Comment</h4>
+    <form
+      action="/posts/<%= post.id %>/comments"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <div class="mb-3">
+        <textarea
+          name="content"
+          class="form-control"
+          rows="3"
+          placeholder="Write your comment here..."
+        ></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="images" class="form-label"
+          ><h4>Select Images for Comment</h4></label
+        >
+        <input
+          type="file"
+          class="form-control"
+          name="images"
+          id="images"
+          multiple
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary mt-3 mb-3">
+        Post Comment
+      </button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

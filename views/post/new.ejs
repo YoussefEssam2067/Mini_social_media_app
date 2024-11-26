@@ -1,0 +1,51 @@
+<%- include('../partials/headerProfile') %>
+
+<div class="container mt-5">
+  <h1 class="text-center">Create New Post</h1>
+
+  <form action="/posts/new" method="POST" class="mt-4" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+        value="<%= formData?.title || '' %>"
+        placeholder="Enter post title"
+      />
+      <% if (errors?.title) { %>
+        <div class="text-danger"><%= errors.title %></div>
+        <% } %>
+    </div>
+
+    <div class="mb-3">
+      <label for="content" class="form-label">Content</label>
+      <textarea
+        class="form-control"
+        id="content"
+        name="content"
+        rows="5"
+        placeholder="Write your post content here"
+      ><%= formData?.content || '' %></textarea>
+      <% if (errors?.content) { %>
+        <div class="text-danger"><%= errors.content %></div>
+        <% } %>
+    </div>
+    
+    <!-- Image input -->
+     <div class="mb-3">
+      <label for="images" class="form-label">Select Image</label>
+      <input
+      type="file"
+      class="form-control"
+      name="images"
+      id="images"
+      multiple
+      />
+
+    <button type="submit" class="btn btn-primary mt-3">Submit Post</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>
